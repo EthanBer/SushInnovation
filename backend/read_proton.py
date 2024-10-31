@@ -1,23 +1,26 @@
 from protonmail import ProtonMail
+# pip install protonmail-api-client
 
 from SushInnovation.TOKENS import PROTON_MAIL_PASSWORD
 
 username = "privatecoupons@proton.me"
-
-
 proton = ProtonMail()
 
-try:
-    proton.load_session("session_key")
-except FileNotFoundError:
-    proton.login(username, PROTON_MAIL_PASSWORD)
+def login():
+    try:
+        proton.load_session("session_key")
+    except FileNotFoundError:
+        proton.login(username, PROTON_MAIL_PASSWORD)
 
-# Get a list of all messages
-messages = proton.get_messages()
+def read_messages():
+    # Get a list of all messages
+    messages = proton.get_messages()
 
-for message in messages:
-    message = proton.read_message(message)
-    print(message.sender.address, message.subject)
-    # print(message.body)
+    return [proton.read_message(msg, mark_as_read=False) for msg in messages]
 
-proton.save_session("session_key")
+
+if __name__ == "__main__":
+    login()
+    read_messages()
+
+    proton.save_session("session_key")
