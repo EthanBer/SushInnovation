@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Menu, Search, X, User, History, Tag, Inbox, Settings, LogOut, LogIn, Moon, Sun } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import '../global.css'
+import SearchResults from './SearchResults';
 
 const Home = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -9,9 +9,11 @@ const Home = () => {
   const [isSearchActive, setIsSearchActive] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isAnimating, setIsAnimating] = useState(false);
 
   const menuRef = useRef(null);
   const profileRef = useRef(null);
+  const searchContainerRef = useRef(null);
   const navigate = useNavigate();
 
   const [isDarkMode, setIsDarkMode] = useState(() => {
@@ -51,18 +53,42 @@ const Home = () => {
   const handleSearch = (e) => {
     e.preventDefault();
     if (searchQuery.trim()) {
-      setIsSearchActive(true);
+      setIsAnimating(true);
+      setTimeout(() => {
+        setIsSearchActive(true);
+        setIsAnimating(false);
+      }, 300);
     }
   };
 
   const resetSearch = () => {
-    setSearchQuery('');
-    setIsSearchActive(false);
+    setIsAnimating(true);
+    setTimeout(() => {
+      setSearchQuery('');
+      setIsSearchActive(false);
+      setIsAnimating(false);
+    }, 300);
   };
 
   const handleLogInOut = () => {
     setIsLoggedIn(!isLoggedIn);
     setIsProfileOpen(false);
+  };
+
+  const suggestions = [
+    { id: 1, label: "💻 Laptops", query: "Where can I get a new macbook pro 14'" },
+    { id: 2, label: "🎸 Guitars", query: "Electric guitar deals" },
+    { id: 3, label: "👟 Shoes", query: "shoe deals" },
+    { id: 4, label: "🍤 Tempura", query: "tempura dishes" },
+  ];
+
+  const handleSuggestionClick = (query) => {
+    setSearchQuery(query);
+    setIsAnimating(true);
+    setTimeout(() => {
+      setIsSearchActive(true);
+      setIsAnimating(false);
+    }, 300);
   };
 
   return (
@@ -72,11 +98,7 @@ const Home = () => {
           <div className="nav-flex">
             {/* Left section */}
             <div className="nav-left" ref={menuRef}>
-              <button
-                onClick={toggleNav}
-                className="menu-button"
-                aria-label="Toggle menu"
-              >
+              <button onClick={toggleNav} className="menu-button" aria-label="Toggle menu">
                 {isOpen ? <X size={24} /> : <Menu size={24} />}
               </button>
 
@@ -107,20 +129,12 @@ const Home = () => {
 
             {/* Right section */}
             <div className="nav-right">
-              <button
-                onClick={() => setIsDarkMode(!isDarkMode)}
-                className="profile-button"
-                aria-label="Toggle dark mode"
-              >
+              <button onClick={() => setIsDarkMode(!isDarkMode)} className="profile-button" aria-label="Toggle dark mode">
                 {isDarkMode ? <Sun size={24} /> : <Moon size={24} />}
               </button>
 
               <div className="relative" ref={profileRef}>
-                <button
-                  onClick={toggleProfile}
-                  className="profile-button"
-                  aria-label="Profile menu"
-                >
+                <button onClick={toggleProfile} className="profile-button" aria-label="Profile menu">
                   <User size={24} />
                 </button>
 
@@ -133,19 +147,13 @@ const Home = () => {
                             <Settings size={18} />
                             Settings
                           </button>
-                          <button
-                            onClick={handleLogInOut}
-                            className="dropdown-item w-full"
-                          >
+                          <button onClick={handleLogInOut} className="dropdown-item w-full">
                             <LogOut size={18} />
                             Sign Out
                           </button>
                         </>
                       ) : (
-                        <button
-                          onClick={() => navigate('/signin')}
-                          className="dropdown-item w-full"
-                        >
+                        <button onClick={() => navigate('/signin')} className="dropdown-item w-full">
                           <LogIn size={18} />
                           Sign In
                         </button>
@@ -159,33 +167,62 @@ const Home = () => {
         </div>
       </nav>
 
-      {/* Main centered search */}
-      <div className="main-search-container">
-        <form onSubmit={handleSearch} className="relative">
-          <input
-            type="text"
-            placeholder="Search for Discounts..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="search-input"
-          />
-          <Search className="search-icon" />
-        </form>
+      <div
+        ref={searchContainerRef}
+        className={`search-container ${isSearchActive ? 'search-active' : ''} ${isAnimating ? 'animating' : ''}`}
+      >
+        {!isSearchActive && (
+          <div className="search-header">
+            <h1 className="search-header-title">Discover Amazing Deals</h1>
+          </div>
+        )}
+
+        <div className="search-form-container">
+          <form onSubmit={handleSearch} className="relative">
+            <input
+              type="text"
+              placeholder="Search for Discounts..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="search-input"
+            />
+            <Search className="search-icon" />
+          </form>
+
+          {isSearchActive && (
+            <div className="search-query-text">
+              Showing results for: {searchQuery}
+              <button onClick={resetSearch} className="new-search-button ml-4">
+                New Search
+              </button>
+            </div>
+          )}
+        </div>
+
+        {!isSearchActive && (
+          <div className="suggestion-container">
+            {suggestions.map((suggestion) => (
+              <div key={suggestion.id}>
+                <button
+                  onClick={() => handleSuggestionClick(suggestion.query)}
+                  className="suggestion-button"
+                >
+                  {suggestion.label.split(' ')[0]}
+                </button>
+                <div className="suggestion-label">
+                  {suggestion.label.split(' ')[1]}
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
 
-      {/* Search results section */}
+      {/* Search Results */}
       {isSearchActive && (
-        <main className="main-content">
-          <div className="search-results-header">
-            <h2 className="text-xl">Search Results for: {searchQuery}</h2>
-            <button
-              onClick={resetSearch}
-              className="new-search-button"
-            >
-              New Search
-            </button>
-          </div>
-        </main>
+        <div className="mt-4">
+          <SearchResults query={searchQuery} />
+        </div>
       )}
     </div>
   );
