@@ -1,7 +1,7 @@
 from protonmail import ProtonMail
-# pip install protonmail-api-client
 
-from SushInnovation.TOKENS import PROTON_MAIL_PASSWORD
+from TOKENS import PROTON_MAIL_PASSWORD
+# pip install protonmail-api-client
 
 username = "privatecoupons@proton.me"
 proton = ProtonMail()
@@ -21,6 +21,8 @@ def read_messages():
 
 if __name__ == "__main__":
     login()
-    read_messages()
+    messages = read_messages()
+
+    print(messages[0].subject)
 
     proton.save_session("session_key")

@@ -1,7 +1,7 @@
 import requests
 import re
 import time
-from SushInnovation.TOKENS import SERP_API_KEY
+from TOKENS import SERP_API_KEY
 from serpapi import GoogleSearch
 import urllib.parse
 
