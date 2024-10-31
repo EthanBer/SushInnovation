@@ -1,40 +1,397 @@
-/* global.css */
+/* Reset and base styles */
+:root {
+  --primary: #3b82f6;
+  --primary-hover: #2563eb;
+  --background-light: #f0f0f0;
+  --background-dark: #1a1a1a;
+  --nav-light: #ffffff;
+  --nav-dark: #1f2937;
+  --text-light: #333333;
+  --text-dark: #ffffff;
+  --dropdown-light: #f3f4f6;
+  --dropdown-dark: #374151;
+  --dropdown-hover-light: #e5e7eb;
+  --dropdown-hover-dark: #4b5563;
+}
 
-/* Reset some default browser styles */
-body, h1, p, ul {
-    margin: 0;
-    padding: 0;
-    list-style: none;
-  }
-  
-  /* Set a global font and background color */
-  body {
-    font-family: Arial, sans-serif;
-    background-color: #f0f0f0;
-    color: #333;
-  }
-  
-  /* Style the navigation */
-  nav {
-    background-color: #333;
-    padding: 10px;
-  }
-  
-  nav ul {
-    display: flex;
-    gap: 10px;
-  }
-  
-  nav a {
-    color: white;
-    text-decoration: none;
-  }
-  
-  nav a:hover {
-    text-decoration: underline;
-  }
-  
-  /* Add some padding to the page content */
-  div {
-    padding: 20px;
-  }
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Inter', Arial, sans-serif;
+  transition: background-color 0.3s, color 0.3s;
+  min-height: 100vh;
+}
+
+body[data-theme="light"] {
+  background-color: var(--background-light);
+  color: var(--text-light);
+}
+
+body[data-theme="dark"] {
+  background-color: var(--background-dark);
+  color: var(--text-dark);
+}
+
+/* Navigation Styles */
+.nav-fixed {
+  height: 72px;
+  transition: background-color 0.3s;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 50;
+}
+
+body[data-theme="light"] .nav-fixed {
+  background-color: var(--nav-light);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+body[data-theme="dark"] .nav-fixed {
+  background-color: var(--nav-dark);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.nav-content {
+  height: 100%;
+  padding: 0 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.nav-flex {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+}
+
+/* Center logo section */
+.nav-center {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.app-title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  transition: color 0.3s;
+}
+
+body[data-theme="light"] .app-title {
+  color: var(--text-light);
+}
+
+body[data-theme="dark"] .app-title {
+  color: var(--text-dark);
+}
+
+/* Left section */
+.nav-left {
+  display: flex;
+  align-items: center;
+}
+
+/* Right section */
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+/* Menu and Profile Buttons */
+.menu-button, .profile-button {
+  padding: 0.75rem;
+  border-radius: 0.75rem;
+  transition: all 0.3s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+.menu-button:hover, .profile-button:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+body[data-theme="dark"] .menu-button:hover, 
+body[data-theme="dark"] .profile-button:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.menu-button svg, .profile-button svg {
+  width: 28px;
+  height: 28px;
+  transition: color 0.3s;
+}
+
+body[data-theme="light"] .menu-button svg, 
+body[data-theme="light"] .profile-button svg {
+  color: var(--text-light);
+}
+
+body[data-theme="dark"] .menu-button svg, 
+body[data-theme="dark"] .profile-button svg {
+  color: var(--text-dark);
+}
+
+/* Dropdown Menus */
+.dropdown-menu, .profile-menu {
+  position: absolute;
+  margin-top: 1rem;
+  border-radius: 1rem;
+  overflow: hidden;
+  transition: background-color 0.3s;
+  width: 16rem;
+  z-index: 51;
+}
+
+.dropdown-menu {
+  left: 0;
+  top: 100%;
+}
+
+.profile-menu {
+  right: 0;
+  top: 100%;
+}
+
+body[data-theme="light"] .dropdown-menu,
+body[data-theme="light"] .profile-menu {
+  background-color: var(--dropdown-light);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+body[data-theme="dark"] .dropdown-menu,
+body[data-theme="dark"] .profile-menu {
+  background-color: var(--dropdown-dark);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+}
+
+.dropdown-item {
+  padding: 1rem 1.5rem;
+  font-size: 1.1rem;
+  transition: background-color 0.3s, color 0.3s;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+body[data-theme="light"] .dropdown-item {
+  color: var(--text-light);
+}
+
+body[data-theme="dark"] .dropdown-item {
+  color: var(--text-dark);
+}
+
+body[data-theme="light"] .dropdown-item:hover {
+  background-color: var(--dropdown-hover-light);
+}
+
+body[data-theme="dark"] .dropdown-item:hover {
+  background-color: var(--dropdown-hover-dark);
+}
+
+/* Main Search Container */
+.main-search-container {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 90%;
+  max-width: 600px;
+  z-index: 40;
+}
+
+.search-input {
+  width: 100%;
+  height: 56px;
+  font-size: 1.2rem;
+  padding: 0 1.5rem 0 3.5rem;
+  border-radius: 28px;
+  transition: all 0.3s;
+  border: none;
+}
+
+body[data-theme="light"] .search-input {
+  background-color: #f3f4f6;
+  color: var(--text-light);
+}
+
+body[data-theme="dark"] .search-input {
+  background-color: #374151;
+  color: var(--text-dark);
+}
+
+.search-input:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--primary);
+}
+
+.search-icon {
+  position: absolute;
+  left: 1.25rem;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 24px;
+  height: 24px;
+  pointer-events: none;
+  transition: color 0.3s;
+}
+
+body[data-theme="light"] .search-icon {
+  color: #6b7280;
+}
+
+body[data-theme="dark"] .search-icon {
+  color: #9ca3af;
+}
+/* Sign In Page Styles - Complete Update */
+.signin-container {
+  max-width: 450px;
+  margin: 120px auto;
+  padding: 2.5rem;
+  border-radius: 1rem;
+  transition: all 0.3s;
+}
+
+body[data-theme="light"] .signin-container {
+  background-color: var(--nav-light);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+body[data-theme="dark"] .signin-container {
+  background-color: var(--nav-dark);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+}
+
+.signin-title {
+  font-size: 2rem;
+  font-weight: 600;
+  margin-bottom: 2rem;
+  text-align: center;
+  transition: color 0.3s;
+}
+
+body[data-theme="light"] .signin-title {
+  color: var(--text-light);
+}
+
+body[data-theme="dark"] .signin-title {
+  color: var(--text-dark);
+}
+
+.signin-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.signin-input {
+  width: 100%;
+  height: 48px;
+  font-size: 1.1rem;
+  padding: 0 1.25rem;
+  border-radius: 0.5rem;
+  transition: all 0.3s;
+  box-sizing: border-box;
+}
+
+body[data-theme="light"] .signin-input {
+  background-color: #f3f4f6;
+  border: 1px solid #e5e7eb;
+  color: var(--text-light);
+}
+
+body[data-theme="dark"] .signin-input {
+  background-color: #374151;
+  border: 1px solid #4b5563;
+  color: var(--text-dark);
+}
+
+body[data-theme="light"] .signin-input::placeholder {
+  color: #6b7280;
+}
+
+body[data-theme="dark"] .signin-input::placeholder {
+  color: #9ca3af;
+}
+
+.signin-input:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+}
+
+.signin-button {
+  height: 48px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  background-color: var(--primary);
+  color: white;
+  border: none;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: all 0.3s;
+  margin-top: 0.5rem;
+}
+
+.signin-button:hover {
+  background-color: var(--primary-hover);
+  transform: translateY(-1px);
+}
+
+.signin-button:active {
+  transform: translateY(0);
+}
+
+.forgot-password-link {
+  display: block;
+  text-align: center;
+  margin-top: 1.5rem;
+  color: var(--primary);
+  font-size: 1rem;
+  text-decoration: none;
+  transition: color 0.3s;
+}
+
+.forgot-password-link:hover {
+  color: var(--primary-hover);
+  text-decoration: underline;
+}
+
+/* Additional helper classes for signin page */
+.signin-divider {
+  margin: 1.5rem 0;
+  border: 0;
+  height: 1px;
+  transition: background-color 0.3s;
+}
+
+body[data-theme="light"] .signin-divider {
+  background-color: #e5e7eb;
+}
+
+body[data-theme="dark"] .signin-divider {
+  background-color: #4b5563;
+}
+
+.signin-error {
+  color: #ef4444;
+  font-size: 0.875rem;
+  margin-top: 0.5rem;
+}
+
+/* Add smooth transition for all interactive elements */
+button, input, a {
+  transition: all 0.2s ease-in-out;
+}
