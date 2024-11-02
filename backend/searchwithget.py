@@ -145,7 +145,7 @@ def main():
     # Get the recommendations array
     recommendations_array = get_recommendations_array(product_name, price_range)
     if recommendations_array:
-        print("\nProduct Recommendations (as 2D array):\n")
+        print("\nProduct Recommendations (as 1d array outputs from a 2D array):\n")
         for item in recommendations_array:
             print(item)
     else:
